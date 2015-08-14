@@ -41,7 +41,7 @@ void Player::update(const sdl::Event& event) {
             _angle -= _moveAngle;
         } else if (event.key.key == _rhsKey) {
             _angle += _moveAngle;
-        } else if (_ki) {
+        } else if (!_humanUsage) {
             _angle += dice_angle();
         }
     }

@@ -28,12 +28,12 @@ public:
         return !_run;
     }
 
-    void toggle() {
-        _ki = !_ki;
+    void toggleUsage() {
+        _humanUsage = !_humanUsage;
     }
 
     bool used() const {
-        return !_ki;
+        return _humanUsage;
     }
 
     const sdl::Color& getColor() const {
@@ -48,7 +48,7 @@ public:
 
 private:
     bool _run = true;
-    bool _ki = true;
+    bool _humanUsage = false;
 
     i32_t _lhsKey = 0;
     i32_t _rhsKey = 0;

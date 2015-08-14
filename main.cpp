@@ -42,7 +42,7 @@ int main() {
                     break;
 
                     case SDLK_F1:
-                        players[0].toggle();
+                        players[0].toggleUsage();
 
                         if (players[0].used()) {
                             choosen[0] = sdl::Rect(112, 99, 300, 48);
@@ -52,7 +52,7 @@ int main() {
                     break;
 
                     case SDLK_F2:
-                        players[1].toggle();
+                        players[1].toggleUsage();
 
                         if (players[1].used()) {
                             choosen[1] = sdl::Rect(112, 170, 300, 48);
@@ -62,7 +62,7 @@ int main() {
                     break;
 
                     case SDLK_F3:
-                        players[2].toggle();
+                        players[2].toggleUsage();
 
                         if (players[2].used()) {
                             choosen[2] = sdl::Rect(112, 240, 300, 48);
@@ -72,7 +72,7 @@ int main() {
                     break;
 
                     case SDLK_F4:
-                        players[3].toggle();
+                        players[3].toggleUsage();
 
                         if (players[3].used()) {
                             choosen[3] = sdl::Rect(112, 315, 300, 48);
