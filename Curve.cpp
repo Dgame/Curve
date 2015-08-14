@@ -4,6 +4,8 @@
 #include "SDL/include/Event.hpp"
 #include "SDL/include/Rect.hpp"
 
+#include "Text.hpp"
+
 #include <iostream>
 
 Curve::Curve(u32_t width, u32_t height) {
@@ -11,9 +13,29 @@ Curve::Curve(u32_t width, u32_t height) {
     _renderer = _wnd->createRenderer(SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
     _players[0] = Player(SDLK_LEFT, SDLK_RIGHT, 45, 11, sdl::Color::Red);
+    _players[0].setName("Red");
+
     _players[1] = Player(SDLK_a, SDLK_d, 45, 11, sdl::Color::Blue);
+    _players[1].setName("Blue");
+
     _players[2] = Player(SDLK_q, SDLK_e, 45, 11, sdl::Color::Green);
+    _players[2].setName("Green");
+
     _players[3] = Player(SDLK_y, SDLK_c, 45, 11, sdl::Color::Yellow);
+    _players[3].setName("Yellow");
+
+    u16_t y = 20;
+    for (auto& coin : _coins) {
+        coin = std::unique_ptr<Text>(new Text("font/arial.ttf", 20));
+        coin->setPosition(_wnd->width() - 100, y);
+        y += 20;
+    }
+
+    u32_t win_width, win_height;
+    _wnd->fetchSize(&win_width, &win_height);
+
+    _winnerText = std::unique_ptr<Text>(new Text("font/arial.ttf", 32));
+    _winnerText->setPosition((win_width / 2) - 150, (win_height / 2) - 50);
 }
 
 void Curve::run() {
@@ -22,7 +44,7 @@ void Curve::run() {
 }
 
 void Curve::_choose() {
-    sdl::Texture* choose_bg = _renderer->createTexture("choose.png");
+    sdl::Texture* choose_bg = _renderer->createTexture("images/choose.png");
 
     std::array<sdl::Rect, 4> choosen;
 
@@ -105,6 +127,7 @@ void Curve::_game() {
     sdl::Event event;
 
     bool running = true;
+
     while (running) {
         while (sdl::PollEvent(&event)) {
             if (event.type == SDL_QUIT)
@@ -124,8 +147,11 @@ void Curve::_game() {
         _renderer->clear(&sdl::Color::White);
 
         _draw();
-        if (!_review())
-            running = false;
+
+        if (!_finished)
+            _review();
+        else
+            _drawWinner();
 
         _renderer->present();
     }
@@ -141,9 +167,22 @@ void Curve::_draw() {
     for (Player& p : _players) {
         p.drawOn(_renderer);
     }
+
+    u16_t i = 0;
+    for (auto& coin : _coins) {
+        const sdl::Vector2i& pos = coin->getPosition();
+
+        _renderer->setDrawColor(_players[i].getColor());
+        _renderer->fillRect(sdl::Rect(pos.x - 25, pos.y + 5, 15, 15));
+
+        coin->format("%d credits", _players[i].coins);
+        coin->renderOn(_renderer);
+
+        i++;
+    }
 }
 
-bool Curve::_review() {
+void Curve::_review() {
     // Kollision & out of bounds
 
     u32_t win_width, win_height;
@@ -172,21 +211,25 @@ bool Curve::_review() {
 
     bool finish = false;
     if (stopped >= (_players.size() - 1)) {
+        _setCredits();
         finish = _checkWin();
     }
 
-    return !finish;
+    if (finish) {
+        _stop();
+    }
 }
 
-bool Curve::_checkWin() {
-    u16_t max_coins = 0;
+void Curve::_setCredits() {
     for (Player& p : _players) {
         if (!p.stopped()) {
             p.coins += 10;
         }
-
-        max_coins = std::max(p.coins, max_coins);
     }
+}
+
+bool Curve::_checkWin() {
+    const u16_t max_coins = _getMaxCoins();
 
     if (max_coins >= ((_players.size() - 1) * 10)) {
         return true;
@@ -197,8 +240,42 @@ bool Curve::_checkWin() {
     return false;
 }
 
+u16_t Curve::_getMaxCoins() const {
+    u16_t max_coins = 0;
+    for (const Player& p : _players) {
+        max_coins = std::max(p.coins, max_coins);
+    }
+
+    return max_coins;
+}
+
 void Curve::_reset() {
     for (Player& p : _players) {
         p.reset();
+    }
+}
+
+void Curve::_stop() {
+    for (Player& p : _players) {
+        p.stop();
+    }
+
+    _finished = true;
+}
+
+void Curve::_drawWinner() {
+    const u16_t max_coins = _getMaxCoins();
+    for (const Player& p : _players) {
+        if (p.coins == max_coins) {
+            const sdl::Vector2i& pos = _winnerText->getPosition();
+
+            _renderer->setDrawColor(p.getColor());
+            _renderer->drawRect(sdl::Rect(0, pos.y - 15, _wnd->width(), 80));
+
+            _winnerText->format("And the winner is %s", p.getName().c_str());
+            _winnerText->renderOn(_renderer);
+
+            break;
+        }
     }
 }

@@ -43,6 +43,14 @@ public:
         return _color;
     }
 
+    void setName(const std::string& name) {
+        _name = name;
+    }
+
+    const std::string& getName() const {
+        return _name;
+    }
+
     void update(const sdl::Event&);
     void drawOn(sdl::Renderer*);
 
@@ -62,6 +70,7 @@ private:
     u8_t _lineSize = 5;
 
     sdl::Color _color;
+    std::string _name = "Unknown";
 
     std::vector<sdl::Vector2f> _points;
 };

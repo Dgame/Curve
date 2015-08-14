@@ -8,6 +8,7 @@
 #include "SDL/include/types.hpp"
 
 #include "Player.hpp"
+#include "Text.hpp"
 
 namespace sdl {
     struct Event;
@@ -26,15 +27,25 @@ private:
     sdl::Renderer* _renderer;
 
     std::array<Player, 4> _players;
+    std::array<std::unique_ptr<Text>, 4> _coins;
+
+    std::unique_ptr<Text> _winnerText;
+
+    bool _finished = false;
 
     void _choose();
     void _game();
 
     void _update(const sdl::Event&);
+
     void _draw();
-    bool _review();
+    void _review();
+    void _setCredits();
     bool _checkWin();
+    u16_t _getMaxCoins() const;
     void _reset();
+    void _stop();
+    void _drawWinner();
 };
 
 #endif
