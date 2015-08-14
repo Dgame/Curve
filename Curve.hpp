@@ -32,6 +32,7 @@ private:
     std::unique_ptr<Text> _winnerText;
 
     bool _finished = false;
+    bool _running = true;
 
     void _choose();
     void _game();

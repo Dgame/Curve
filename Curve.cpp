@@ -50,16 +50,15 @@ void Curve::_choose() {
 
     sdl::Event event;
 
-    bool running = true;
     bool choose = true;
-    while (running && choose) {
+    while (_running && choose) {
         while (sdl::PollEvent(&event)) {
             if (event.type == SDL_QUIT)
-                running = false;
+                _running = false;
             else if (event.type == SDL_KEYDOWN) {
                 switch (event.key.key) {
                     case SDLK_ESCAPE:
-                        running = false;
+                        _running = false;
                     break;
 
                     case SDLK_SPACE:
@@ -126,16 +125,14 @@ void Curve::_choose() {
 void Curve::_game() {
     sdl::Event event;
 
-    bool running = true;
-
-    while (running) {
+    while (_running) {
         while (sdl::PollEvent(&event)) {
             if (event.type == SDL_QUIT)
-                running = false;
+                _running = false;
             else if (event.type == SDL_KEYDOWN) {
                 switch (event.key.key) {
                     case SDLK_ESCAPE:
-                        running = false;
+                        _running = false;
                         break;
 
                     default:
