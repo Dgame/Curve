@@ -15,10 +15,13 @@ namespace sdl {
 
 class Player {
 public:
+    u16_t coins = 0;
+
     Player() = default;
     explicit Player(i32_t, i32_t, u16_t, u16_t, const sdl::Color&);
 
     void setLineSize(u8_t);
+    void reset();
 
     void stop() {
         _run = false;

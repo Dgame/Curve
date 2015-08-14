@@ -25,14 +25,22 @@ Player::Player(i32_t lhs, i32_t rhs, u16_t angle, u16_t move, const sdl::Color& 
     _moveAngle(move),
     _color(col)
 {
-    const f32_t x = dice();
-    const f32_t y = dice();
-
-    _points.push_back(sdl::Vector2f(x, y));
+    this->reset();
 }
 
 void Player::setLineSize(u8_t size) {
     _lineSize = size;
+}
+
+void Player::reset() {
+    _points.clear();
+
+    const f32_t x = dice();
+    const f32_t y = dice();
+
+    _points.push_back(sdl::Vector2f(x, y));
+
+    _run = true;
 }
 
 void Player::update(const sdl::Event& event) {
