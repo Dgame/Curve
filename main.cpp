@@ -13,9 +13,11 @@ int main() {
 
     sdl::Event event;
 
-    std::array<Player, 2> players;
+    std::array<Player, 4> players;
     players[0] = Player(SDLK_LEFT, SDLK_RIGHT, 45, 11, sdl::Color::Red);
-    players[1] = Player(SDLK_a, SDLK_s, 45, 11, sdl::Color::Blue);
+    players[1] = Player(SDLK_a, SDLK_d, 45, 11, sdl::Color::Blue);
+    players[2] = Player(SDLK_q, SDLK_e, 45, 11, sdl::Color::Green);
+    players[3] = Player(SDLK_y, SDLK_c, 45, 11, sdl::Color::Yellow);
 
     u32_t win_width;
     u32_t win_height;
@@ -37,7 +39,6 @@ int main() {
                         for (Player& p : players) {
                             p.update(event);
                         }
-                    break;
                 }
             }
         }
@@ -50,20 +51,24 @@ int main() {
 
         u16_t stopped = 0;
         for (u16_t i = 0; i < players.size(); i++) {
-            for (u16_t j = i + 1; j < players.size(); j++) {
+            for (u16_t j = 0; j < players.size(); j++) {
                 if (players[i].collideWith(players[j])) {
-                    std::cout << "Kollision mit anderem Spieler" << std::endl;
+                    // std::cout << "Kollision mit anderem Spieler" << std::endl;
                     players[i].stop();
-                    stopped++;
                 }
             }
 
             if (!players[i].stopped() && players[i].outOfBounds(win_width, win_height)) {
-                std::cout << "Out of bounds" << std::endl;
+                // std::cout << "Out of bounds" << std::endl;
                 players[i].stop();
+            }
+
+            if (players[i].stopped()) {
                 stopped++;
             }
         }
+
+        std::cout << stopped << std::endl;
 
         if (stopped >= (players.size() - 1)) {
             std::cout << "Over and out" << std::endl;

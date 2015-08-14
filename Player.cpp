@@ -12,8 +12,10 @@
 namespace {
     std::default_random_engine gen;
     std::uniform_int_distribution<i16_t> dist(1, 250);
+    std::uniform_int_distribution<i16_t> dist_angle(-45, 45);
 
     auto dice = std::bind(dist, gen);
+    auto dice_angle = std::bind(dist_angle, gen);
 }
 
 Player::Player(i32_t lhs, i32_t rhs, u16_t angle, u16_t move, const sdl::Color& col) :
@@ -39,6 +41,8 @@ void Player::update(const sdl::Event& event) {
             _angle -= _moveAngle;
         } else if (event.key.key == _rhsKey) {
             _angle += _moveAngle;
+        } else {
+            _angle += dice_angle();
         }
     }
 }
@@ -65,10 +69,26 @@ void Player::drawOn(sdl::Renderer* renderer) {
 }
 
 bool Player::collideWith(const Player& other) const {
+    const sdl::Vector2f& pos = _points.back();
+
+    if (&other == this) {
+        if (_points.size() < 10)
+            return false;
+
+        for (u16_t i = 0; i < _points.size() - 1; i++) {
+            const f32_t dx = std::abs(pos.x - _points[i].x);
+            const f32_t dy = std::abs(pos.y - _points[i].y);
+
+            if (dx <= 0.5f && dy <= 0.5f) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     const u8_t line_size = std::max(_lineSize, other._lineSize);
 
-    const sdl::Vector2f& pos = _points.back();
-    
     for (const sdl::Vector2f& o_pos : other._points) {
         const f32_t dx = std::abs(pos.x - o_pos.x);
         const f32_t dy = std::abs(pos.y - o_pos.y);
@@ -87,11 +107,13 @@ bool Player::outOfBounds(u32_t width, u32_t height) const {
 
     const sdl::Vector2f& last = _points.back();
 
-    if (last.x < _lineSize || last.x > (width - _lineSize)) {
+    if (last.x <= 0 || last.x >= width) {
         return true;
     }
 
-    if (last.y < _lineSize || last.y > (height - _lineSize)) {
+    // std::cout << last.x << ':' << last.y << std::endl;
+
+    if (last.y <= 0 || last.y >= height) {
         return true;
     }
 
