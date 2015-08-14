@@ -1,11 +1,11 @@
 #include "SDL/include/Window.hpp"
 #include "SDL/include/Renderer.hpp"
 #include "SDL/include/Event.hpp"
-#include "SDL/include/Color.hpp"
-#include "SDL/include/Rect.hpp"
 
 #include <iostream>
-#include <vector>
+#include <array>
+
+#include "Player.hpp"
 
 int main() {
     sdl::Window wnd("Curve", sdl::Vector2i(100, 100), 640, 480);
@@ -13,11 +13,14 @@ int main() {
 
     sdl::Event event;
 
-    std::vector<sdl::Vector2f> points;
-    points.reserve(1024);
-    points.emplace_back(sdl::Vector2f(1, 1));
+    std::array<Player, 2> players;
+    players[0] = Player(SDLK_LEFT, SDLK_RIGHT, 45, 11, sdl::Color::Red);
+    players[1] = Player(SDLK_a, SDLK_s, 45, 11, sdl::Color::Blue);
 
-    f32_t angle = 45;
+    u32_t win_width;
+    u32_t win_height;
+
+    wnd.fetchSize(&win_width, &win_height);
 
     bool running = true;
     while (running) {
@@ -30,31 +33,41 @@ int main() {
                         running = false;
                         break;
 
-                    case SDLK_LEFT:
-                        angle -= 11;
-                        break;
-
-                    case SDLK_RIGHT:
-                        angle += 11;
-                        break;
+                    default:
+                        for (Player& p : players) {
+                            p.update(event);
+                        }
+                    break;
                 }
             }
         }
 
-        sdl::Vector2f vec = points.back();
-        vec.x += std::cos(angle * M_PI / 180);
-        vec.y += std::sin(angle * M_PI / 180);
-
-        points.push_back(vec);
-
         renderer->clear(&sdl::Color::White);
 
-        for (const sdl::Vector2f& point : points) {
-            const i32_t x = static_cast<i32_t>(point.x);
-            const i32_t y = static_cast<i32_t>(point.y);
+        for (Player& p : players) {
+            p.drawOn(renderer);
+        }
 
-            renderer->setDrawColor(sdl::Color::Red);
-            renderer->fillRect(sdl::Rect(x, y, 5, 5));
+        u16_t stopped = 0;
+        for (u16_t i = 0; i < players.size(); i++) {
+            for (u16_t j = i + 1; j < players.size(); j++) {
+                if (players[i].collideWith(players[j])) {
+                    std::cout << "Kollision mit anderem Spieler" << std::endl;
+                    players[i].stop();
+                    stopped++;
+                }
+            }
+
+            if (!players[i].stopped() && players[i].outOfBounds(win_width, win_height)) {
+                std::cout << "Out of bounds" << std::endl;
+                players[i].stop();
+                stopped++;
+            }
+        }
+
+        if (stopped >= (players.size() - 1)) {
+            std::cout << "Over and out" << std::endl;
+            running = false;
         }
 
         renderer->present();

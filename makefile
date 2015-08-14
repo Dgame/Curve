@@ -6,7 +6,7 @@ FRAMEWORK_FILES = $(FRAMEWORK_DIR)\Window.cpp $(FRAMEWORK_DIR)\Color.cpp  $(FRAM
   $(FRAMEWORK_DIR)\Texture.cpp $(FRAMEWORK_DIR)\Renderer.cpp $(FRAMEWORK_DIR)\Event.cpp \
   $(FRAMEWORK_DIR)\Surface.cpp $(FRAMEWORK_DIR)\Timer.cpp $(FRAMEWORK_DIR)\Font.cpp
 
-GAME_FILES = main.cpp
+GAME_FILES = main.cpp Player.cpp
 
 OBJS = $(GAME_FILES) $(FRAMEWORK_FILES)
 CC = g++
