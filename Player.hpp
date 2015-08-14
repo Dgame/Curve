@@ -28,6 +28,18 @@ public:
         return !_run;
     }
 
+    void toggle() {
+        _ki = !_ki;
+    }
+
+    bool used() const {
+        return !_ki;
+    }
+
+    const sdl::Color& getColor() const {
+        return _color;
+    }
+
     void update(const sdl::Event&);
     void drawOn(sdl::Renderer*);
 
@@ -36,6 +48,7 @@ public:
 
 private:
     bool _run = true;
+    bool _ki = true;
 
     i32_t _lhsKey = 0;
     i32_t _rhsKey = 0;

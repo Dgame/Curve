@@ -1,6 +1,7 @@
 #include "SDL/include/Window.hpp"
 #include "SDL/include/Renderer.hpp"
 #include "SDL/include/Event.hpp"
+#include "SDL/include/Rect.hpp"
 
 #include <iostream>
 #include <array>
@@ -19,12 +20,88 @@ int main() {
     players[2] = Player(SDLK_q, SDLK_e, 45, 11, sdl::Color::Green);
     players[3] = Player(SDLK_y, SDLK_c, 45, 11, sdl::Color::Yellow);
 
+    bool running = true;
+    bool choose = true;
+
+    sdl::Texture* choose_bg = renderer->createTexture("choose.png");
+
+    std::array<sdl::Rect, 4> choosen;
+
+    while (running && choose) {
+        while (sdl::PollEvent(&event)) {
+            if (event.type == SDL_QUIT)
+                running = false;
+            else if (event.type == SDL_KEYDOWN) {
+                switch (event.key.key) {
+                    case SDLK_ESCAPE:
+                        running = false;
+                    break;
+
+                    case SDLK_SPACE:
+                        choose = false;
+                    break;
+
+                    case SDLK_F1:
+                        players[0].toggle();
+
+                        if (players[0].used()) {
+                            choosen[0] = sdl::Rect(112, 99, 300, 48);
+                        } else {
+                            choosen[0].collapse();
+                        }
+                    break;
+
+                    case SDLK_F2:
+                        players[1].toggle();
+
+                        if (players[1].used()) {
+                            choosen[1] = sdl::Rect(112, 170, 300, 48);
+                        } else {
+                            choosen[1].collapse();
+                        }
+                    break;
+
+                    case SDLK_F3:
+                        players[2].toggle();
+
+                        if (players[2].used()) {
+                            choosen[2] = sdl::Rect(112, 240, 300, 48);
+                        } else {
+                            choosen[2].collapse();
+                        }
+                    break;
+
+                    case SDLK_F4:
+                        players[3].toggle();
+
+                        if (players[3].used()) {
+                            choosen[3] = sdl::Rect(112, 315, 300, 48);
+                        } else {
+                            choosen[3].collapse();
+                        }
+                    break;
+                }
+            }
+        }
+
+        renderer->copy(choose_bg, nullptr);
+
+        u16_t i = 0;
+        for (const sdl::Rect& rect : choosen) {
+            renderer->setDrawColor(players[i].getColor());
+            renderer->drawRect(rect);
+
+            i++;
+        }
+
+        renderer->present();
+    }
+
     u32_t win_width;
     u32_t win_height;
 
     wnd.fetchSize(&win_width, &win_height);
 
-    bool running = true;
     while (running) {
         while (sdl::PollEvent(&event)) {
             if (event.type == SDL_QUIT)
@@ -68,7 +145,7 @@ int main() {
             }
         }
 
-        std::cout << stopped << std::endl;
+        // std::cout << stopped << std::endl;
 
         if (stopped >= (players.size() - 1)) {
             std::cout << "Over and out" << std::endl;
