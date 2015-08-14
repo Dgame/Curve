@@ -45,7 +45,7 @@ int main() {
                         players[0].toggleUsage();
 
                         if (players[0].used()) {
-                            choosen[0] = sdl::Rect(112, 99, 300, 48);
+                            choosen[0] = sdl::Rect(80, 99, 390, 54);
                         } else {
                             choosen[0].collapse();
                         }
@@ -55,7 +55,7 @@ int main() {
                         players[1].toggleUsage();
 
                         if (players[1].used()) {
-                            choosen[1] = sdl::Rect(112, 170, 300, 48);
+                            choosen[1] = sdl::Rect(80, 180, 390, 54);
                         } else {
                             choosen[1].collapse();
                         }
@@ -65,7 +65,7 @@ int main() {
                         players[2].toggleUsage();
 
                         if (players[2].used()) {
-                            choosen[2] = sdl::Rect(112, 240, 300, 48);
+                            choosen[2] = sdl::Rect(80, 260, 390, 54);
                         } else {
                             choosen[2].collapse();
                         }
@@ -75,7 +75,7 @@ int main() {
                         players[3].toggleUsage();
 
                         if (players[3].used()) {
-                            choosen[3] = sdl::Rect(112, 315, 300, 48);
+                            choosen[3] = sdl::Rect(80, 340, 390, 54);
                         } else {
                             choosen[3].collapse();
                         }
