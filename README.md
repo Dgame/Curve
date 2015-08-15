@@ -5,8 +5,8 @@ A simple clone of the well known [Achtung, die Kurve!](https://de.wikipedia.org/
 ###Screenshots:
 
 Choose your color (multiple selections for multiple players are allowed):
-![Choose](https://raw.githubusercontent.com/Dgame/Curve/master/images/curve_screen_choose.png)
+![Choose](https://raw.githubusercontent.com/Dgame/Curve/master/images/choose_screen.png)
 
 and play:
 
-![Choose](https://raw.githubusercontent.com/Dgame/Curve/master/images/curve_screen.png)
+![Choose](https://raw.githubusercontent.com/Dgame/Curve/master/images/screen.png)
