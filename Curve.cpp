@@ -25,8 +25,8 @@ Curve::Curve(u32_t width, u32_t height) {
     _players[2] = Player(SDLK_q, SDLK_e, 45, 11, sdl::Color::Green);
     _players[2].setName("Green");
 
-    _players[3] = Player(SDLK_y, SDLK_c, 45, 11, sdl::Color::Yellow);
-    _players[3].setName("Yellow");
+    _players[3] = Player(SDLK_y, SDLK_c, 45, 11, sdl::Color::Orange);
+    _players[3].setName("Orange");
 
     u16_t y = 20;
     for (auto& coin : _coins) {
