@@ -1,5 +1,6 @@
 #include "Curve.hpp"
 
+#include "SDL/include/Surface.hpp"
 #include "SDL/include/Renderer.hpp"
 #include "SDL/include/Event.hpp"
 #include "SDL/include/Rect.hpp"
@@ -11,6 +12,9 @@
 Curve::Curve(u32_t width, u32_t height) {
     _wnd  = std::unique_ptr<sdl::Window>(new sdl::Window("Curve", sdl::Vector2i(100, 100), width, height));
     _renderer = _wnd->createRenderer(SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+
+    sdl::Surface icon("images/icon.png");
+    _wnd->setIcon(icon);
 
     _players[0] = Player(SDLK_LEFT, SDLK_RIGHT, 45, 11, sdl::Color::Red);
     _players[0].setName("Red");
