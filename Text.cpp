@@ -12,12 +12,12 @@ sdl::Vector2i Text::getPosition() const {
     return sdl::Vector2i(_clipRect.x, _clipRect.y);
 }
 
-void Text::renderOn(sdl::Renderer* renderer) {
+void Text::renderOn(sdl::Renderer& renderer) {
     sdl::Surface srfc = _font.render(_text, this->foreground, &this->background, sdl::Font::Solid);
 
     _clipRect.width = srfc.width();
     _clipRect.height = srfc.height();
 
-    sdl::Texture* tex = renderer->createTexture(srfc);
-    renderer->copy(tex, &_clipRect);
+    sdl::Texture tex(renderer, srfc);
+    renderer.copy(tex, &_clipRect);
 }

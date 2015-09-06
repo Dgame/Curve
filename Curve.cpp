@@ -2,6 +2,7 @@
 
 #include "SDL/include/Surface.hpp"
 #include "SDL/include/Renderer.hpp"
+#include "SDL/include/Texture.hpp"
 #include "SDL/include/Event.hpp"
 #include "SDL/include/Rect.hpp"
 
@@ -11,7 +12,7 @@
 
 Curve::Curve(u32_t width, u32_t height) {
     _wnd  = std::unique_ptr<sdl::Window>(new sdl::Window("Curve", sdl::Vector2i(100, 100), width, height));
-    _renderer = _wnd->createRenderer(SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    _renderer = std::unique_ptr<sdl::Renderer>(new sdl::Renderer(*_wnd.get(), SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC));
 
     sdl::Surface icon("images/icon.png");
     _wnd->setIcon(icon);
@@ -48,7 +49,7 @@ void Curve::run() {
 }
 
 void Curve::_choose() {
-    sdl::Texture* choose_bg = _renderer->createTexture("images/choose.png");
+    sdl::Texture choose_bg(*_renderer.get(), "images/choose.png");
 
     std::array<sdl::Rect, 4> choosen;
 
@@ -60,7 +61,7 @@ void Curve::_choose() {
             if (event.type == SDL_QUIT)
                 _running = false;
             else if (event.type == SDL_KEYDOWN) {
-                switch (event.key.key) {
+                switch (event.keyboard.key) {
                     case SDLK_ESCAPE:
                         _running = false;
                     break;
@@ -134,7 +135,7 @@ void Curve::_game() {
             if (event.type == SDL_QUIT)
                 _running = false;
             else if (event.type == SDL_KEYDOWN) {
-                switch (event.key.key) {
+                switch (event.keyboard.key) {
                     case SDLK_ESCAPE:
                         _running = false;
                         break;
@@ -166,7 +167,7 @@ void Curve::_update(const sdl::Event& event) {
 
 void Curve::_draw() {
     for (Player& p : _players) {
-        p.drawOn(_renderer);
+        p.drawOn(*_renderer.get());
     }
 
     u16_t i = 0;
@@ -177,7 +178,7 @@ void Curve::_draw() {
         _renderer->fillRect(sdl::Rect(pos.x - 25, pos.y + 5, 15, 15));
 
         coin->format("%d credits", _players[i].coins);
-        coin->renderOn(_renderer);
+        coin->renderOn(*_renderer);
 
         i++;
     }
@@ -274,7 +275,7 @@ void Curve::_drawWinner() {
             _renderer->drawRect(sdl::Rect(0, pos.y - 15, _wnd->width(), 80));
 
             _winnerText->format("And the winner is %s", p.getName().c_str());
-            _winnerText->renderOn(_renderer);
+            _winnerText->renderOn(*_renderer.get());
 
             break;
         }

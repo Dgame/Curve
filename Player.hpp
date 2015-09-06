@@ -52,7 +52,7 @@ public:
     }
 
     void update(const sdl::Event&);
-    void drawOn(sdl::Renderer*);
+    void drawOn(sdl::Renderer&);
 
     bool collideWith(const Player&) const;
     bool outOfBounds(u32_t, u32_t) const;

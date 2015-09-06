@@ -5,6 +5,7 @@
 #include <memory>
 
 #include "SDL/include/Window.hpp"
+#include "SDL/include/Renderer.hpp"
 #include "SDL/include/types.hpp"
 
 #include "Player.hpp"
@@ -12,9 +13,6 @@
 
 namespace sdl {
     struct Event;
-
-    class Window;
-    class Renderer;
 }
 
 class Curve {
@@ -24,7 +22,7 @@ public:
     void run();
 private:
     std::unique_ptr<sdl::Window> _wnd;
-    sdl::Renderer* _renderer;
+    std::unique_ptr<sdl::Renderer> _renderer;
 
     std::array<Player, 4> _players;
     std::array<std::unique_ptr<Text>, 4> _coins;

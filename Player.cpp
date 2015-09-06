@@ -45,9 +45,9 @@ void Player::reset() {
 
 void Player::update(const sdl::Event& event) {
     if (_run && event.type == SDL_KEYDOWN) {
-        if (event.key.key == _lhsKey) {
+        if (event.keyboard.key == _lhsKey) {
             _angle -= _moveAngle;
-        } else if (event.key.key == _rhsKey) {
+        } else if (event.keyboard.key == _rhsKey) {
             _angle += _moveAngle;
         } else if (!_humanUsage) {
             _angle += dice_angle();
@@ -55,10 +55,7 @@ void Player::update(const sdl::Event& event) {
     }
 }
 
-void Player::drawOn(sdl::Renderer* renderer) {
-    if (!renderer)
-        return;
-
+void Player::drawOn(sdl::Renderer& renderer) {
     if (_run) {
         sdl::Vector2f vec = _points.back();
         vec.x += std::cos(_angle * M_PI / 180);
@@ -71,8 +68,8 @@ void Player::drawOn(sdl::Renderer* renderer) {
         const i32_t x = static_cast<i32_t>(point.x);
         const i32_t y = static_cast<i32_t>(point.y);
 
-        renderer->setDrawColor(_color);
-        renderer->fillRect(sdl::Rect(x, y, 5, 5));
+        renderer.setDrawColor(_color);
+        renderer.fillRect(sdl::Rect(x, y, 5, 5));
     }
 }
 

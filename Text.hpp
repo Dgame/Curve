@@ -43,7 +43,7 @@ public:
         _text = text;
     }
 
-    void renderOn(sdl::Renderer*);
+    void renderOn(sdl::Renderer&);
 
     const sdl::Font* getFont() const {
         return &_font;
